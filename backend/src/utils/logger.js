@@ -11,7 +11,6 @@ const levels = {
   debug: 4
 };
 
-// Handle .
 const level = () => env.nodeEnv === 'development' ? 'debug' : 'warn';
 
 const colors = {
@@ -33,11 +32,15 @@ const format = winston.format.combine(
   })
 );
 
-const transports = [
-new winston.transports.Console(),
-new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-new winston.transports.File({ filename: 'logs/combined.log' })];
+const transports = [new winston.transports.Console()];
 
+// File logging is only enabled outside Vercel.
+if (process.env.VERCEL !== '1') {
+  transports.push(
+    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'logs/combined.log' })
+  );
+}
 
 const logger = winston.createLogger({
   level: level(),
