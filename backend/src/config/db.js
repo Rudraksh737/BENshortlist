@@ -36,9 +36,9 @@ const connectDB = async () => {
     const conn = await mongoose.connect(env.mongodbUri);
     await dropLegacyApplicationIndexes(conn.connection);
     logger.info(`MongoDB connected: ${conn.connection.host}`);
-  } catch (error) {
+    } catch (error) {
     logger.error(`MongoDB connection error: ${error.message}`);
-    process.exit(1);
+    throw error;
   }
 };
 
